@@ -1,0 +1,38 @@
+version: 1.0.{build}
+image:
+- Visual Studio 2017
+test: off
+build:
+  parallel: true
+platform:
+- x64
+- x86
+environment:
+  matrix:
+  - JOB: 1
+  - JOB: 2
+  - JOB: 3
+  - JOB: 4
+  - JOB: 5
+  - JOB: 6
+  - JOB: 7
+  - JOB: 8
+  - JOB: 9
+  - JOB: 10
+  - JOB: 11
+  - JOB: 12
+  - JOB: 13
+  - JOB: 14
+  - JOB: 15
+  - JOB: 16
+install:
+- ps: |
+    if ($env:PLATFORM -eq "x64") { $env:CMAKE_ARCH = "x64" }
+    $env:CMAKE_GENERATOR = "Visual Studio 15 2017"
+    $env:PATH = "C:\Miniconda36-x64\;C:\Miniconda36-x64\Scripts\;$env:PATH"
+    conda install -y -q pytest numpy scipy
+build_script:
+- cmake -G "%CMAKE_GENERATOR%" -A "%CMAKE_ARCH%"
+- set MSBuildLogger="C:\Program Files\AppVeyor\BuildAgent\Appveyor.MSBuildLogger.dll"
+- cmake --build . -- /v:m /logger:%MSBuildLogger%
+
